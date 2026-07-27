@@ -48,7 +48,7 @@ function BookCard({ book }) {
   const authorText = Array.isArray(book.authors) && book.authors.length > 0 ? book.authors.join(", ") : "Unknown author";
 
   function openDetailsPage() {
-    navigate(`/library/${encodeURIComponent(book.libraryId)}`);
+    navigate(`/library/${book.libraryId}`);
   }
 
   async function handleSave() {

@@ -191,10 +191,6 @@ function HomePage() {
       <header className="mb-4">
         <h1 className="display-5">My Library</h1>
 
-        <button type="button" className="btn btn-danger" onClick={logout}>
-          Temporary Logout
-        </button>
-
         <p className="text-secondary mb-0">Search, filter, and review your saved books.</p>
       </header>
 

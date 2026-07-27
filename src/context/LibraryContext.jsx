@@ -29,7 +29,6 @@ export function LibraryProvider({ children }) {
 
     const unsubscribe = onSnapshot(
       booksCollectionRef,
-
       (snapshot) => {
         const books = snapshot.docs.map((bookDocument) => ({
           ...bookDocument.data(),
@@ -39,11 +38,10 @@ export function LibraryProvider({ children }) {
         setLibraryBooks(books);
         setLibraryLoading(false);
       },
-
       (error) => {
         console.error("Unable to load library:", error);
 
-        setLibraryError("Unable to load your library.");
+        setLibraryError(error.message || "Unable to load your library.");
 
         setLibraryLoading(false);
       },

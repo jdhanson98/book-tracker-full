@@ -14,9 +14,30 @@ function getReadingStatusLabel(status) {
 
 function BookDetailsPage() {
   const { libraryId } = useParams();
-  const { libraryBooks } = useLibrary();
+  const { libraryBooks, libraryLoading, libraryError } = useLibrary();
 
-  const book = libraryBooks.find((libraryBook) => libraryBook.libraryId === libraryId);
+  const encodedLibraryId = encodeURIComponent(libraryId);
+
+  const book = libraryBooks.find((libraryBook) => libraryBook.libraryId === encodedLibraryId);
+
+  if (libraryLoading) {
+    return (
+      <main className="container py-5">
+        <div className="text-center">
+          <div className="spinner-border" role="status" />
+          <p className="mt-3 text-secondary">Loading book...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (libraryError) {
+    return (
+      <main className="container py-5">
+        <div className="alert alert-danger">{libraryError}</div>
+      </main>
+    );
+  }
 
   if (!book) {
     return (
