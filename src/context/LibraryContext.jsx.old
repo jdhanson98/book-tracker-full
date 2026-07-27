@@ -1,0 +1,105 @@
+import { createContext, useContext, useEffect, useState } from "react";
+
+const LibraryContext = createContext(null);
+
+const LOCAL_STORAGE_KEY = "book-tracker-library";
+
+function createLibraryId(book) {
+  return `${book.source}:${book.id}`;
+}
+
+function loadLibraryBooks() {
+  const savedLibrary = localStorage.getItem(LOCAL_STORAGE_KEY);
+
+  if (!savedLibrary) {
+    return [];
+  }
+
+  try {
+    const parsedLibrary = JSON.parse(savedLibrary);
+
+    if (!Array.isArray(parsedLibrary)) {
+      return [];
+    }
+
+    return parsedLibrary;
+  } catch (error) {
+    console.error("Could not load the library from localStorage:", error);
+
+    return [];
+  }
+}
+
+export function LibraryProvider({ children }) {
+  const [libraryBooks, setLibraryBooks] = useState(loadLibraryBooks);
+
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(libraryBooks));
+  }, [libraryBooks]);
+
+  function addBook(book, libraryDetails) {
+    const libraryId = createLibraryId(book);
+
+    const alreadyExists = libraryBooks.some((libraryBook) => libraryBook.libraryId === libraryId);
+
+    if (alreadyExists) {
+      return {
+        success: false,
+        message: "This book is already in your library.",
+      };
+    }
+
+    const newLibraryBook = {
+      ...book,
+      ...libraryDetails,
+      libraryId,
+      addedAt: new Date().toISOString(),
+    };
+
+    setLibraryBooks((currentBooks) => [...currentBooks, newLibraryBook]);
+
+    return {
+      success: true,
+      book: newLibraryBook,
+    };
+  }
+
+  function updateBook(libraryId, updates) {
+    setLibraryBooks((currentBooks) =>
+      currentBooks.map((book) =>
+        book.libraryId === libraryId
+          ? {
+              ...book,
+              ...updates,
+            }
+          : book,
+      ),
+    );
+  }
+
+  function removeBook(libraryId) {
+    setLibraryBooks((currentBooks) => currentBooks.filter((book) => book.libraryId !== libraryId));
+  }
+
+  return (
+    <LibraryContext.Provider
+      value={{
+        libraryBooks,
+        addBook,
+        updateBook,
+        removeBook,
+      }}>
+      {children}
+    </LibraryContext.Provider>
+  );
+}
+
+export function useLibrary() {
+  const context = useContext(LibraryContext);
+
+  if (!context) {
+    throw new Error("useLibrary must be used inside LibraryProvider.");
+  }
+
+  return context;
+}

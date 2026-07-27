@@ -1,0 +1,48 @@
+.book-cover {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  background-color: #e9ecef;
+}
+
+.search-result-cover {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+}
+
+.search-result-cover-placeholder {
+  min-height: 220px;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background-color: #e9ecef;
+  color: #6c757d;
+  text-align: center;
+}
+
+.book-cover {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+}
+
+.book-cover-placeholder {
+  height: 320px;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background-color: #e9ecef;
+  color: #6c757d;
+  text-align: center;
+}
+
+.recharts-default-legend {
+  font-size: 0.9rem;
+}
+
+.recharts-text {
+  font-size: 0.8rem;
+}
